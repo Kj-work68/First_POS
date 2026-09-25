@@ -93,9 +93,13 @@ const initTables = async (db: Database) => {
 
     // สร้าง Default Owner account (Username: admin / Password: adminpassword)
     const defaultPasswordHash = await hashPassword('adminpassword');
+    const defaultPasswordHashUser = await hashPassword('password');
     await db.run(
-      `INSERT INTO users (username, password, full_name, role_id) VALUES (?, ?, ?, ?)`,
-      ['admin', defaultPasswordHash, 'Store Owner', 1]
+      `INSERT INTO users (username, password, full_name, role_id) VALUES (?, ?, ?, ?), (?, ?, ?, ?)`,
+      [
+        'admin', defaultPasswordHash, 'Store Owner', 1,
+        'user', defaultPasswordHashUser, 'Test User', 3
+      ]
     );
 
     // Seed Sample Categories
