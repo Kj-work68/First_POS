@@ -8,11 +8,6 @@ export const MainLayout: React.FC = () => {
     const { user, logout} = useAuthStore();
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        logout
-        navigate('/login');
-    }
-
   return (
     <div className="layout-wrapper">
       {/* Top Navigation Bar */}
@@ -30,7 +25,7 @@ export const MainLayout: React.FC = () => {
             severity="danger"
             text
             rounded
-            onClick={handleLogout}
+            onClick={logout}
             tooltip="Logout"
           />
         </div>
