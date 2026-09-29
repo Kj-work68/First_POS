@@ -69,8 +69,7 @@ export const Login: React.FC = () => {
       <Toast ref={toast} />
       <div className="login-card">
         <div className="login-header">
-          <h2>Smart POS</h2>
-          <p>Please enter your credentials to continue</p>
+          <h2>First POS</h2>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -98,7 +97,7 @@ export const Login: React.FC = () => {
               inputClassName="w-full"
             />
           </div>
-
+            <p>Please enter your credentials to continue</p>
           <Button
             label="Sign In"
             type="submit"

@@ -8,6 +8,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
 import { Tag } from 'primereact/tag';
+import { Paginator } from 'primereact/paginator';
 
 import services from '../../services/axios';
 import type { Product, Category, ProductFormData } from '../../types/inventory';
@@ -35,6 +36,13 @@ export const Inventory: React.FC = () => {
   const [saving, setSaving] = useState<boolean>(false);
 
   const toast = useRef<Toast>(null);
+  const [first, setFirst] = useState<number>(0);
+  const [rows, setRows] = useState<number>(5);
+
+  const onPageChange = (e: any) => {
+    setFirst(e.first);
+    setRows(e.rows);
+  };
 
   // ดึงข้อมูลสินค้าและหมวดหมู่
   const fetchData = async () => {
@@ -176,9 +184,9 @@ export const Inventory: React.FC = () => {
       </div>
 
       <DataTable
-        value={products}
-        paginator
-        rows={10}
+        value={products.slice(first, first + rows)}
+        first={first}
+        rows={rows}
         loading={loading}
         header={header}
         globalFilter={globalFilter}
@@ -204,6 +212,15 @@ export const Inventory: React.FC = () => {
         <Column body={actionBodyTemplate} exportable={false} style={{ width: '5rem' }} />
       </DataTable>
 
+      <Paginator
+        first={first}
+        rows={rows}
+        totalRecords={products.length}
+        rowsPerPageOptions={[5, 10, 20, 30]}
+        onPageChange={onPageChange}
+        style={{ justifyContent: 'flex-end' }}
+      />
+
       {/* Modal Dialog สำหรับเพิ่ม/แก้ไข สินค้า */}
       <Dialog
         visible={productDialog}
@@ -223,6 +240,16 @@ export const Inventory: React.FC = () => {
               placeholder="e.g. 885123456789"
             />
           </div> */}
+
+          <div className="form-field">
+            <label htmlFor="sku">SKU*</label>
+              <InputText
+                id="sku"
+                value={formData.sku}
+                onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
+                placeholder="e.g. 885123456789"
+            />
+          </div>
 
           <div className="form-field">
             <label htmlFor="name">Product Name *</label>

@@ -84,6 +84,31 @@ const initTables = async (db: Database) => {
     );
   `);
 
+  // 6. Sales Table
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS sales (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      total_amount REAL NOT NULL,
+      paid_amount REAL NOT NULL,
+      change_amount REAL NOT NULL,
+      payment_method TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+
+// 7. Sale Items Table
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS sale_items (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      sale_id INTEGER NOT NULL,
+      product_id INTEGER NOT NULL,
+      quantity INTEGER NOT NULL,
+      price REAL NOT NULL,
+      FOREIGN KEY (sale_id) REFERENCES sales (id) ON DELETE CASCADE,
+      FOREIGN KEY (product_id) REFERENCES products (id)
+    );
+`);
+
   // Seed Default Roles & Owner User
   const roleCount = await db.get('SELECT COUNT(*) as count FROM roles');
   if (roleCount.count === 0) {
@@ -94,10 +119,12 @@ const initTables = async (db: Database) => {
     // สร้าง Default Owner account (Username: admin / Password: adminpassword)
     const defaultPasswordHash = await hashPassword('adminpassword');
     const defaultPasswordHashUser = await hashPassword('password');
+    const defaultPasswordHashStock = await hashPassword('1234');
     await db.run(
-      `INSERT INTO users (username, password, full_name, role_id) VALUES (?, ?, ?, ?), (?, ?, ?, ?)`,
+      `INSERT INTO users (username, password, full_name, role_id) VALUES (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?)`,
       [
         'admin', defaultPasswordHash, 'Store Owner', 1,
+        'stock', defaultPasswordHashStock, 'Test Stock', 2,
         'user', defaultPasswordHashUser, 'Test User', 3
       ]
     );

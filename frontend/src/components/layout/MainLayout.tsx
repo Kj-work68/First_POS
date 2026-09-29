@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Outlet, useNavigate, } from 'react-router-dom'
 import { Button } from 'primereact/button'
 import { useAuthStore } from '../../stores/useAuthStore'
@@ -8,25 +8,52 @@ export const MainLayout: React.FC = () => {
     const { user, logout} = useAuthStore();
     const navigate = useNavigate();
 
+    const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+
+    const toggleSidebar = () => {
+      setIsCollapsed((prev) => !prev);
+    }
+
+    const handleGoToDashboard = () => {
+      navigate('/dashboard');
+      window.location.reload();
+    }
+
   return (
-    <div className="layout-wrapper">
+    <div className={`layout-wrapper ${isCollapsed ? 'sidebar-collapsed' : ''}`}>
       {/* Top Navigation Bar */}
       <header className="layout-topbar">
         <div className="topbar-brand">
-          <i className="pi pi-box" style={{ fontSize: '1.5rem', color: 'var(--accent)' }}></i>
-          <span>Smart POS</span>
+          <div className="topbar-left" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          {/*เพิ่มปุ่ม Toggle Sidebar */}
+          <Button
+            icon="pi pi-bars"
+            text
+            // rounded
+            onClick={toggleSidebar}
+            // tooltip="Toggle Sidebar"
+          />
+          </div>
+          <span
+            onClick={handleGoToDashboard}
+            style={{ cursor: 'pointer'}}
+          >
+            First POS
+          </span>
+          <i className="pi pi-prime" style={{ fontSize: '1.5rem', color: 'var(--accent)', marginLeft: '10px' }}></i>
         </div>
         <div className="topbar-user">
           <span className="user-info">
             <strong>{user?.fullName}</strong> ({user?.role})
           </span>
           <Button
-            icon="pi pi-power-off"
+            icon="pi pi-sign-out"
             severity="danger"
             text
             rounded
             onClick={logout}
-            tooltip="Logout"
+            className='button-logout'
+            // tooltip="Logout"
           />
         </div>
       </header>
@@ -34,7 +61,7 @@ export const MainLayout: React.FC = () => {
       {/* Main Container */}
       <div className="layout-container">
         {/* Sidebar Menu */}
-        <aside className="layout-sidebar">
+        <aside className={`layout-sidebar ${isCollapsed ? 'collapsed' : ''}`}>
           <nav className="menu-list">
             <button className="menu-item" onClick={() => navigate('/dashboard')}>
               <i className="pi pi-home"></i>

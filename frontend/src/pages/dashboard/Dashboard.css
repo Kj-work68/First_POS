@@ -1,0 +1,31 @@
+.dashboard-container {
+  padding: 1.5rem;
+}
+
+.dashboard-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-color, #333);
+  margin-bottom: 1.5rem;
+}
+
+/* Layout Grid สำหรับแบ่งพื้นที่ 2 ฝั่ง */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+/* Container สี่เหลี่ยมสำหรับคุมขนาด Canvas ของ react-chartjs-2 */
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 320px; /* กำหนดความสูงที่ต้องการตรงนี้ */
+}
+
+/* Responsive ปรับเป็น 1 คอลัมน์บนจอแท็บเล็ต/มือถือ */
+@media (max-width: 992px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}

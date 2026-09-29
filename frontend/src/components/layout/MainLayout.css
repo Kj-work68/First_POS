@@ -12,13 +12,23 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1.5rem;
+  padding: 0 1rem;
+  /* 🔹 ดัน Topbar ขึ้นชั้นบนสุดเพื่อไม่ให้ปุ่ม Toggle โดนบัง */
+  position: relative;
+  z-index: 10;
+}
+
+/* 🔹 เพิ่มคลาสฝั่งซ้ายของ Topbar */
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .topbar-brand {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   font-weight: 700;
   font-size: 1.2rem;
   color: #000;
@@ -35,13 +45,34 @@
   display: flex;
   flex: 1;
   overflow: hidden;
+  position: relative;
 }
 
 .layout-sidebar {
-  width: 240px;
+  width: 200px;
   background: #ffffff;
   border-right: 1px solid var(--border);
   padding: 1rem 0;
+  /* 🔹 เพิ่มเพื่อความเนียนเวลาพับขยาย */
+  transition: width 0.20s ease-in-out;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* 🔹 1. เมื่อพับ Sidebar ให้เหลือความกว้างเท่าไอคอน */
+.layout-sidebar.collapsed {
+  width: 60px;
+}
+
+/* 🔹 2. ซ่อนข้อความเมนูเมื่อถูกพับ */
+.layout-sidebar.collapsed .menu-item span {
+  display: none;
+}
+
+/* 🔹 3. จัดไอคอนให้อยู่ตรงกลางสวยงามเมื่อพับ */
+.layout-sidebar.collapsed .menu-item {
+  justify-content: center;
+  padding: 0.75rem 0;
 }
 
 .menu-list {
@@ -73,4 +104,48 @@
   flex: 1;
   padding: 1.5rem;
   overflow-y: auto;
+}
+
+.button-logout:hover {
+  filter: drop-shadow(0 0 4px rgba(255, 0, 0, 0.8));
+  transform: scale(1.1);
+  transition: all 0.25s ease-in-out;
+}
+
+
+@media (max-width: 768px) {
+  .layout-content {
+    padding: 1rem; /* ลด padding เพื่อเพิ่มพื้นที่แสดงผลบนมือถือ */
+  }
+
+  /* 1. ซ่อน Sidebar ออกไปนอกหน้าจอฝั่งซ้ายเป็นค่าเริ่มต้น */
+  .layout-sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    transform: translateX(-100%);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  }
+
+  /* 2. เมื่อเปิด Sidebar บนมือถือ ให้เลื่อนกลับเข้ามาทับเนื้อหา */
+  .layout-sidebar:not(.collapsed) {
+    transform: translateX(0);
+    width: 220px;
+  }
+
+  /* 3. เมื่อสแนปพับ Sidebar บนมือถือ ให้ซ่อนออกไป */
+  .layout-sidebar.collapsed {
+    transform: translateX(-100%);
+    width: 200px;
+  }
+
+  /* 4. ปรับขนาดฟอนต์/ระยะ Topbar บนมือถือ */
+  .topbar-brand span {
+    font-size: 1rem;
+  }
+  
+  .topbar-user span {
+    display: none; /* ซ่อนชื่อผู้ใช้บนมือถือ ให้เหลือแค่ปุ่ม Logout หรือไอคอน */
+  }
 }
